@@ -23,6 +23,6 @@ const createPhotoDescription = () => ({
   comments: createComments(),
 });
 
-const createPhotoDescriptions = () => Array.from({ length: 25 }, createPhotoDescription);
+const createPhotoDescriptions = (count) => Array.from({ length: count }, createPhotoDescription);
 
 export { createPhotoDescriptions };
