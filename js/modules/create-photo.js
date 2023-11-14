@@ -1,4 +1,4 @@
-import { MESSAGES, NAMES, DESCRIPTIONS } from './constants.js';
+import { MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO } from './constants.js';
 import { getRandomInteger, getRandomArrayElement, getRandomId } from './random.js';
 
 const generateCommentId = getRandomId(1, 500);
@@ -10,8 +10,8 @@ const createComment = () => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const generatePhotoId = getRandomId(1, 25);
-const generateUrlId = getRandomId(1, 25);
+const generatePhotoId = getRandomId(1, NUMBER_OF_PHOTO);
+const generateUrlId = getRandomId(1, NUMBER_OF_PHOTO);
 
 const createComments = () => Array.from({ length: getRandomInteger(0, 30) }, createComment);
 
@@ -23,6 +23,6 @@ const createPhotoDescription = () => ({
   comments: createComments(),
 });
 
-const createPhotoDescriptions = () => Array.from({ length: 25 }, createPhotoDescription);
+const createPhotoDescriptions = (count) => Array.from({ length: count }, createPhotoDescription);
 
 export { createPhotoDescriptions };

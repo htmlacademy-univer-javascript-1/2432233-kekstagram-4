@@ -1,3 +1,3 @@
-import { createPhotoDescriptions } from './modules/create-photo.js';
+import { renderThubmnails } from './modules/rendering-thumbnails.js';
 
-createPhotoDescriptions();
+renderThubmnails(25);

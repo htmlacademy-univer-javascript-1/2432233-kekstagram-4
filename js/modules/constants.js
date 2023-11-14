@@ -25,4 +25,6 @@ const DESCRIPTIONS = [
   'Экзотические пальмы на пляже'
 ];
 
-export {MESSAGES, NAMES, DESCRIPTIONS};
+const NUMBER_OF_PHOTO = 25;
+
+export {MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO};
