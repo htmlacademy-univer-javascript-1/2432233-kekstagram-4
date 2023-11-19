@@ -1,5 +1,5 @@
 import { MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO } from './constants.js';
-import { getRandomInteger, getRandomArrayElement, getRandomId } from './random.js';
+import { getRandomInteger, getRandomArrayElement, getRandomId } from './util.js';
 
 const generateCommentId = getRandomId(1, 500);
 
