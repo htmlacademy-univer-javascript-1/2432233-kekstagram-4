@@ -1,4 +1,5 @@
 import { createPhotoDescriptions } from './create-photo.js';
+import { openPicture } from './window-rendering.js';
 
 const picturesList = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
@@ -16,6 +17,10 @@ const renderThubmnails = (count) => {
     pictureElement.querySelector('.picture__img').alt = picture.description;
     pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
     pictureElement.querySelector('.picture__likes').textContent = picture.likes;
+
+    pictureElement.addEventListener('click', () => {
+      openPicture(picture);
+    });
 
     picturesFragment.append(pictureElement);
   });
