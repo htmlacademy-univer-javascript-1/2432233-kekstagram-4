@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { MAX_LENGTH_OF_COMMENTS, MAX_LENGTH_OF_HASHTAG, HASHTAG_FORMAT } from './constants.js';
+import { MAX_LENGTH_OF_COMMENTS, MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT } from './constants.js';
 
 const input = document.querySelector('.img-upload__input');
 const form = document.querySelector('.img-upload__overlay');
@@ -50,7 +50,19 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
 });
 
-function validateHashtags(value) {
+function validateHashtagsCount(value) {
+  let result = true;
+
+  value.trim();
+  const hashtagsList = value.split(' ');
+
+  if (hashtagsList.length > MAX_COUNT_OF_HASHTAGS) {
+    result = false;
+  }
+  return result;
+}
+
+function validateHashtagsFormat(value) {
   let result = true;
 
   if (value === '') {
@@ -59,20 +71,28 @@ function validateHashtags(value) {
     value.trim();
     const hashtagsList = value.split(' ');
 
-    if (hashtagsList.length > MAX_LENGTH_OF_HASHTAG) {
-      result = false;
-    }
-
-    const checkHashtags = [];
-
     hashtagsList.forEach((hashtag) => {
-      if (!HASHTAG_FORMAT.test(hashtag) || checkHashtags.includes(hashtag)) {
+      if (!HASHTAG_FORMAT.test(hashtag)) {
         result = false;
       }
-      checkHashtags.push(hashtag);
     });
   }
+  return result;
+}
 
+function validateHashtagsRepeat(value) {
+  let result = true;
+
+  value.trim();
+  const hashtagsList = value.split(' ');
+  const checkHashtags = [];
+
+  hashtagsList.forEach((hashtag) => {
+    if (checkHashtags.includes(hashtag)) {
+      result = false;
+    }
+    checkHashtags.push(hashtag);
+  });
   return result;
 }
 
@@ -82,8 +102,18 @@ function validateComments(value) {
 
 pristine.addValidator(
   hashtagsField,
-  validateHashtags,
-  'Набран некорректный хештег'
+  validateHashtagsCount,
+  `Кол-во хештегов не больше ${MAX_COUNT_OF_HASHTAGS}`
+);
+pristine.addValidator(
+  hashtagsField,
+  validateHashtagsFormat,
+  'Хештег должен начинаться с символа # и содержать только буквы и цифры (длина хештега не больше 20 символов)'
+);
+pristine.addValidator(
+  hashtagsField,
+  validateHashtagsRepeat,
+  'Хештеги не должны повторяться'
 );
 pristine.addValidator(
   commentsField,
