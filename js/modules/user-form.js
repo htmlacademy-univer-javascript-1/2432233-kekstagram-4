@@ -24,7 +24,9 @@ const closeForm = () => {
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
 
-  form.reset();
+  input.value = '';
+  hashtagsField.value = '';
+  commentsField.value = '';
 };
 
 function onDocumentKeydown (evt) {
