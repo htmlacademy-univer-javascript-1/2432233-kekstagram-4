@@ -35,4 +35,14 @@ const MAX_LENGTH_OF_COMMENTS = 140;
 
 const MAX_COUNT_OF_HASHTAGS = 5;
 
-export {MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO, COUNT_OF_COMMENTS_TO_SHOW, MAX_LENGTH_OF_COMMENTS, MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT};
+const EFFECTS = {
+  none: {name: 'none', unit: ''},
+  chrome: {name: 'grayscale', unit: ''},
+  sepia: {name: 'sepia', unit: ''},
+  marvin: {name: 'invert', unit: '%'},
+  phobos: {name: 'blur', unit: 'px'},
+  heat: {name: 'brightness', unit: ''},
+};
+
+export {MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO, COUNT_OF_COMMENTS_TO_SHOW, MAX_LENGTH_OF_COMMENTS,
+  MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT, EFFECTS};
