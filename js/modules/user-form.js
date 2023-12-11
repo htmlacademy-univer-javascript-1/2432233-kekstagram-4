@@ -1,8 +1,10 @@
 import { isEscapeKey } from './util.js';
 import { MAX_LENGTH_OF_COMMENTS, MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT, EFFECTS } from './constants.js';
+import { sendData } from './api.js';
 
 const input = document.querySelector('.img-upload__input');
-const form = document.querySelector('.img-upload__overlay');
+const formOverlay = document.querySelector('.img-upload__overlay');
+const form = document.querySelector('.img-upload__wrapper');
 const body = document.querySelector('body');
 
 const hashtagsField = form.querySelector('.text__hashtags');
@@ -26,10 +28,22 @@ const marvin = form.querySelector('#effect-marvin');
 const phobos = form.querySelector('#effect-phobos');
 const heat = form.querySelector('#effect-heat');
 
+const successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+const successElement = successTemplate.cloneNode(true);
+const successButton = successElement.querySelector('.success__button');
+
+const errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+const errorElement = errorTemplate.cloneNode(true);
+const errorButton = errorElement.querySelector('.error__button');
+
 let effect = '';
 
 const openForm = () => {
-  form.classList.remove('hidden');
+  formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 
@@ -44,7 +58,7 @@ const openForm = () => {
 input.addEventListener('change', openForm);
 
 const closeForm = () => {
-  form.classList.add('hidden');
+  formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
 
@@ -276,4 +290,91 @@ heat.addEventListener('click', () => {
   });
   effect = EFFECTS.heat;
   imgPreview.style.filter = `${effect.name}(${effectInput.value}${effect.unit})`;
+});
+
+//отправка данных
+
+const blockSubmitBtn = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'ОТПРАВКА...';
+};
+
+const unblockSubmitBtn = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'ОПУБЛИКОВАТЬ';
+};
+
+const removeElement = (element) => {
+  element.remove();
+  document.removeEventListener('keydown', onKeydownCloseMessage);
+  document.removeEventListener('click', clickOutsideMessage);
+};
+
+function onKeydownCloseMessage (evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    removeElement(errorElement);
+    removeElement(successElement);
+  }
+}
+
+function clickOutsideMessage (evt) {
+  const successInner = document.querySelector('.success__inner');
+  const errorInner = document.querySelector('.error__inner');
+  const click = evt.composedPath();
+
+  if (!click.includes(successInner) && !click.includes(errorInner)) {
+    removeElement(successElement);
+    removeElement(errorElement);
+  }
+}
+
+const onSuccessPost = () => {
+  unblockSubmitBtn();
+  closeForm();
+
+  body.appendChild(successElement);
+
+  successButton.addEventListener('click', () => {
+    removeElement(successElement);
+  });
+
+  document.addEventListener('click', clickOutsideMessage);
+  document.addEventListener('keydown', onKeydownCloseMessage);
+};
+
+const closeFormOnFail = () => {
+  formOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+
+  input.value = '';
+
+  submitButton.disabled = false;
+};
+
+const onFailPost = () => {
+  unblockSubmitBtn();
+  closeFormOnFail();
+
+  body.appendChild(errorElement);
+
+  errorButton.addEventListener('click', () => {
+    removeElement(errorElement);
+  });
+
+  document.addEventListener('click', clickOutsideMessage);
+  document.addEventListener('keydown', onKeydownCloseMessage);
+};
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  blockSubmitBtn();
+
+  sendData(
+    () => onSuccessPost(),
+    () => onFailPost(),
+    new FormData(evt.target),
+  );
 });
