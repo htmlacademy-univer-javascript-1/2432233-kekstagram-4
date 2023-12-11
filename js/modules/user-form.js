@@ -349,8 +349,6 @@ const closeFormOnFail = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 
   input.value = '';
-
-  submitButton.disabled = false;
 };
 
 const onFailPost = () => {
