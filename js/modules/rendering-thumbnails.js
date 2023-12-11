@@ -1,4 +1,3 @@
-import { createPhotoDescriptions } from './create-photo.js';
 import { openPicture } from './window-rendering.js';
 
 const picturesList = document.querySelector('.pictures');
@@ -6,9 +5,8 @@ const pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const renderThubmnails = (count) => {
+const renderThubmnails = (pictures) => {
   const picturesFragment = document.createDocumentFragment();
-  const pictures = createPhotoDescriptions(count);
 
   pictures.forEach((picture) => {
     const pictureElement = pictureTemplate.cloneNode(true);

@@ -1,4 +1,11 @@
 import { renderThubmnails } from './modules/rendering-thumbnails.js';
 import './modules/user-form.js';
+import { getData } from './modules/api.js';
+import { showAlert } from './modules/util.js';
 
-renderThubmnails(25);
+getData(
+  (pictures) => {
+    renderThubmnails(pictures);
+  },
+  showAlert,
+);
