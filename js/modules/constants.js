@@ -44,5 +44,16 @@ const EFFECTS = {
   heat: {name: 'brightness', unit: ''},
 };
 
+const SHOW_ALERT_TIME = 2000;
+
+const URLS = {
+  GET_DATA_URL: 'https://29.javascript.pages.academy/kekstagram/data',
+  SEND_DATA_URL: 'https://29.javascript.pages.academy/kekstagram',
+};
+
+const COUNT_RANDOM_PICTURES = 10;
+
+const RENDER_DELAY = 500;
+
 export {MESSAGES, NAMES, DESCRIPTIONS, NUMBER_OF_PHOTO, COUNT_OF_COMMENTS_TO_SHOW, MAX_LENGTH_OF_COMMENTS,
-  MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT, EFFECTS};
+  MAX_COUNT_OF_HASHTAGS, HASHTAG_FORMAT, SHOW_ALERT_TIME, EFFECTS, URLS, COUNT_RANDOM_PICTURES, RENDER_DELAY};

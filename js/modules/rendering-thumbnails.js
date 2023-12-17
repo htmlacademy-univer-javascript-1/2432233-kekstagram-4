@@ -23,7 +23,15 @@ const renderThubmnails = (pictures) => {
     picturesFragment.append(pictureElement);
   });
 
+  clearPictures();
+
   picturesList.append(picturesFragment);
 };
+
+function clearPictures () {
+  picturesList.querySelectorAll('.picture').forEach((pic) => {
+    pic.remove();
+  });
+}
 
 export { renderThubmnails };
