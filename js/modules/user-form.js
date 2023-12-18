@@ -40,6 +40,8 @@ const errorTemplate = document.querySelector('#error')
 const errorElement = errorTemplate.cloneNode(true);
 const errorButton = errorElement.querySelector('.error__button');
 
+const fileInput = form.querySelector('#upload-file');
+
 let effect = '';
 
 const openForm = () => {
@@ -375,4 +377,13 @@ form.addEventListener('submit', (evt) => {
     () => onFailPost(),
     new FormData(evt.target),
   );
+});
+
+
+// загрузка фото
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+
+  imgPreview.src = URL.createObjectURL(file);
 });
