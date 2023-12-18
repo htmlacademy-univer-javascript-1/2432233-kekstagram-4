@@ -2,7 +2,13 @@ import { URLS } from './constants.js';
 
 const getData = (onSuccess, onFail) => {
   fetch(URLS.GET_DATA_URL)
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        onFail('Ошибка загрузки данных, попробуйте обновить страницу');
+      }
+    })
     .then((pictures) => {
       onSuccess(pictures);
     })
