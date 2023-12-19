@@ -130,7 +130,7 @@ function validateHashtagsRepeat(value) {
   let result = true;
 
   value.trim();
-  const hashtagsList = value.split(' ');
+  const hashtagsList = value.toLowerCase().split(' ');
   const checkHashtags = [];
 
   hashtagsList.forEach((hashtag) => {
