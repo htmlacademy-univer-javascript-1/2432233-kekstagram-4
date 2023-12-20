@@ -36,8 +36,8 @@ const loadComments = () => {
     commentsLoaderButton.classList.remove('hidden');
   }
 
-  bigPicture.querySelector('.social__comment-count').innerHTML =`${commentsShown}
-    из <span class='comments-count'>${allComments.length}</span> комментариев`;
+  bigPicture.querySelector('.social__comment-count').innerHTML =
+    `${commentsShown} из <span class='comments-count'>${allComments.length}</span> комментариев`;
 };
 
 const openPicture = (picture) => {

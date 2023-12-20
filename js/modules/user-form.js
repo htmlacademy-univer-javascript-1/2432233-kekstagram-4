@@ -20,6 +20,7 @@ const imgPreview = form.querySelector('.img-upload__preview img');
 
 const effectInput = form.querySelector('.effect-level__value');
 const effectSlider = form.querySelector('.effect-level__slider');
+const sliderWrapper = form.querySelector('.img-upload__effect-level');
 
 const effectNone = form.querySelector('#effect-none');
 const chrome = form.querySelector('#effect-chrome');
@@ -40,6 +41,8 @@ const errorTemplate = document.querySelector('#error')
 const errorElement = errorTemplate.cloneNode(true);
 const errorButton = errorElement.querySelector('.error__button');
 
+const fileInput = form.querySelector('#upload-file');
+
 let effect = '';
 
 const openForm = () => {
@@ -51,7 +54,7 @@ const openForm = () => {
   imgPreview.style.transform = 'scale(1)';
 
   createUiSlider();
-  effectSlider.classList.add('hidden');
+  sliderWrapper.classList.add('hidden');
   imgPreview.style.removeProperty('filter');
 };
 
@@ -97,7 +100,7 @@ const pristine = new Pristine(form, {
 function validateHashtagsCount(value) {
   let result = true;
 
-  value.trim();
+  value = value.trim();
   const hashtagsList = value.split(' ');
 
   if (hashtagsList.length > MAX_COUNT_OF_HASHTAGS) {
@@ -112,7 +115,7 @@ function validateHashtagsFormat(value) {
   if (value === '') {
     result = true;
   } else {
-    value.trim();
+    value = value.trim();
     const hashtagsList = value.split(' ');
 
     hashtagsList.forEach((hashtag) => {
@@ -127,8 +130,8 @@ function validateHashtagsFormat(value) {
 function validateHashtagsRepeat(value) {
   let result = true;
 
-  value.trim();
-  const hashtagsList = value.split(' ');
+  value = value.trim();
+  const hashtagsList = value.toLowerCase().split(' ');
   const checkHashtags = [];
 
   hashtagsList.forEach((hashtag) => {
@@ -165,7 +168,7 @@ pristine.addValidator(
   `Длина комментария не должна превышать ${MAX_LENGTH_OF_COMMENTS} символов`
 );
 
-function formFunction (evt) {
+function formInputHandler (evt) {
   evt.preventDefault();
 
   if (!pristine.validate()) {
@@ -175,7 +178,7 @@ function formFunction (evt) {
   }
 }
 
-form.addEventListener('input', formFunction);
+form.addEventListener('input', formInputHandler);
 
 //Масштабирование изображения
 
@@ -232,13 +235,13 @@ function createUiSlider () {
 }
 
 effectNone.addEventListener('click', () => {
-  effectSlider.classList.add('hidden');
+  sliderWrapper.classList.add('hidden');
   imgPreview.style.removeProperty('filter');
   effect = EFFECTS.none;
 });
 
 chrome.addEventListener('click', () => {
-  effectSlider.classList.remove('hidden');
+  sliderWrapper.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
     range: { min: 0, max: 1 },
     start: 1,
@@ -249,7 +252,7 @@ chrome.addEventListener('click', () => {
 });
 
 sepia.addEventListener('click', () => {
-  effectSlider.classList.remove('hidden');
+  sliderWrapper.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
     range: { min: 0, max: 1 },
     start: 1,
@@ -260,7 +263,7 @@ sepia.addEventListener('click', () => {
 });
 
 marvin.addEventListener('click', () => {
-  effectSlider.classList.remove('hidden');
+  sliderWrapper.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
     range: { min: 0, max: 100 },
     start: 100,
@@ -271,7 +274,7 @@ marvin.addEventListener('click', () => {
 });
 
 phobos.addEventListener('click', () => {
-  effectSlider.classList.remove('hidden');
+  sliderWrapper.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
     range: { min: 0, max: 3 },
     start: 3,
@@ -282,7 +285,7 @@ phobos.addEventListener('click', () => {
 });
 
 heat.addEventListener('click', () => {
-  effectSlider.classList.remove('hidden');
+  sliderWrapper.classList.remove('hidden');
   effectSlider.noUiSlider.updateOptions({
     range: { min: 1, max: 3 },
     start: 3,
@@ -304,17 +307,25 @@ const unblockSubmitBtn = () => {
   submitButton.textContent = 'ОПУБЛИКОВАТЬ';
 };
 
-const removeElement = (element) => {
-  element.remove();
-  document.removeEventListener('keydown', onKeydownCloseMessage);
+const removeErrorElement = () => {
+  errorElement.remove();
+  formOverlay.classList.remove('hidden');
+  document.removeEventListener('keydown', onMessageKeydown);
+  document.removeEventListener('click', clickOutsideMessage);
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const removeSuccessElement = () => {
+  successElement.remove();
+  document.removeEventListener('keydown', onMessageKeydown);
   document.removeEventListener('click', clickOutsideMessage);
 };
 
-function onKeydownCloseMessage (evt) {
+function onMessageKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    removeElement(errorElement);
-    removeElement(successElement);
+    removeErrorElement();
+    removeSuccessElement();
   }
 }
 
@@ -324,8 +335,8 @@ function clickOutsideMessage (evt) {
   const click = evt.composedPath();
 
   if (!click.includes(successInner) && !click.includes(errorInner)) {
-    removeElement(successElement);
-    removeElement(errorElement);
+    removeSuccessElement();
+    removeErrorElement();
   }
 }
 
@@ -336,33 +347,26 @@ const onSuccessPost = () => {
   body.appendChild(successElement);
 
   successButton.addEventListener('click', () => {
-    removeElement(successElement);
+    removeSuccessElement();
   });
 
   document.addEventListener('click', clickOutsideMessage);
-  document.addEventListener('keydown', onKeydownCloseMessage);
-};
-
-const closeFormOnFail = () => {
-  formOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-
-  input.value = '';
+  document.addEventListener('keydown', onMessageKeydown);
 };
 
 const onFailPost = () => {
   unblockSubmitBtn();
-  closeFormOnFail();
+  formOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onDocumentKeydown);
 
   body.appendChild(errorElement);
 
   errorButton.addEventListener('click', () => {
-    removeElement(errorElement);
+    removeErrorElement();
   });
 
   document.addEventListener('click', clickOutsideMessage);
-  document.addEventListener('keydown', onKeydownCloseMessage);
+  document.addEventListener('keydown', onMessageKeydown);
 };
 
 form.addEventListener('submit', (evt) => {
@@ -375,4 +379,13 @@ form.addEventListener('submit', (evt) => {
     () => onFailPost(),
     new FormData(evt.target),
   );
+});
+
+
+// загрузка фото
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+
+  imgPreview.src = URL.createObjectURL(file);
 });

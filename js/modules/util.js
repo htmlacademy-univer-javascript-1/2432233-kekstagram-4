@@ -1,3 +1,5 @@
+import { SHOW_ALERT_TIME } from './constants.js';
+
 const getRandomInteger = (min, max) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
@@ -36,7 +38,28 @@ const showAlert = (message) => {
 
   setTimeout(() => {
     alertContainer.remove();
-  }, 3000);
+  }, SHOW_ALERT_TIME);
 };
 
-export { getRandomInteger, getRandomArrayElement, getRandomId, isEscapeKey, showAlert };
+function shuffle (list) {
+  return list.slice().sort(() => Math.random() - 0.5);
+}
+
+function sortElementsByComments (elemA, elemB) {
+  const commentsA = elemA.comments.length;
+  const commentsB = elemB.comments.length;
+
+  return commentsB - commentsA;
+}
+
+function debounce (callback, timeoutDelay) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+export { getRandomInteger, getRandomArrayElement, getRandomId, isEscapeKey, showAlert, shuffle, sortElementsByComments, debounce };

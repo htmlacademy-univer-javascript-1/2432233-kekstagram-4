@@ -1,6 +1,14 @@
+import { URLS } from './constants.js';
+
 const getData = (onSuccess, onFail) => {
-  fetch('https://29.javascript.pages.academy/kekstagram/data')
-    .then((response) => response.json())
+  fetch(URLS.GET_DATA_URL)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        onFail('Ошибка загрузки данных, попробуйте обновить страницу');
+      }
+    })
     .then((pictures) => {
       onSuccess(pictures);
     })
@@ -11,7 +19,7 @@ const getData = (onSuccess, onFail) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://29.javascript.pages.academy/kekstagram/',
+    URLS.SEND_DATA_URL,
     {
       method: 'POST',
       body,
